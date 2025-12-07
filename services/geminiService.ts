@@ -1,6 +1,30 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { QuizData, QuizSettings, FileData } from "../types";
 
+const getApiKey = (): string | undefined => {
+  // 1. Try Vite / Modern Frontend Build Tools (import.meta.env)
+  try {
+    // @ts-ignore
+    if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_KEY) {
+      // @ts-ignore
+      return import.meta.env.VITE_API_KEY;
+    }
+  } catch (e) {
+    // Ignore
+  }
+
+  // 2. Try Node.js / Cloud Environment (process.env)
+  try {
+    if (typeof process !== 'undefined' && process.env?.API_KEY) {
+      return process.env.API_KEY;
+    }
+  } catch (e) {
+    // process is not defined in browser
+  }
+
+  return undefined;
+};
+
 const parseJsonClean = (text: string) => {
   try {
     const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
@@ -16,9 +40,10 @@ export const generateQuiz = async (
   files: FileData[],
   settings: QuizSettings
 ): Promise<QuizData> => {
-  const apiKey = process.env.API_KEY;
+  const apiKey = getApiKey();
+  
   if (!apiKey) {
-    throw new Error("API Key is missing.");
+    throw new Error("API Key is missing. If running locally, create a .env file with VITE_API_KEY=your_key");
   }
 
   const ai = new GoogleGenAI({ apiKey });
@@ -95,7 +120,7 @@ export const generateQuiz = async (
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview', // Upgraded to 3.0 Pro for better reasoning
+      model: 'gemini-2.5-flash', // Switched to 2.5-flash for better free tier limits
       contents: {
         role: 'user',
         parts: parts
@@ -112,8 +137,11 @@ export const generateQuiz = async (
     }
 
     return parseJsonClean(response.text);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Gemini Generation Error:", error);
+    if (error.status === 429 || error.message?.includes('429')) {
+         throw new Error("Free tier quota exceeded. Please wait a moment before trying again.");
+    }
     throw error;
   }
 };
