@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LalaQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --color-dark-brown: #544230;
+        --color-med-brown: #79614B;
+        --color-tan: #A08267;
+        --color-beige: #C9A585;
+        --color-cream: #F5F1E8;
+      }
+      
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--color-cream);
+        color: var(--color-dark-brown);
+      }
+      
+      h1, h2, h3, h4, .brand-font {
+        font-family: 'Kanit', sans-serif;
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--color-tan); 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-med-brown); 
+      }
+      
+      .perspective-1000 {
+        perspective: 1000px;
+      }
+      .transform-style-3d {
+        transform-style: preserve-3d;
+      }
+      .backface-hidden {
+        backface-visibility: hidden;
+      }
+      .rotate-y-180 {
+        transform: rotateY(180deg);
+      }
+      
+      /* Earth Theme Card Styles */
+      .earth-card {
+        background: white;
+        border: 2px solid var(--color-dark-brown);
+        box-shadow: 6px 6px 0px 0px var(--color-dark-brown);
+        border-radius: 24px;
+        transition: all 0.2s ease;
+      }
+      .earth-card:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 8px 8px 0px 0px var(--color-dark-brown);
+      }
+      
+      .earth-input {
+        border: 2px solid var(--color-beige);
+        background: white;
+        color: var(--color-dark-brown);
+        transition: all 0.2s;
+      }
+      .earth-input:focus {
+        outline: none;
+        border-color: var(--color-dark-brown);
+        box-shadow: 0 0 0 4px rgba(84, 66, 48, 0.1);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
+    "gsap": "https://esm.sh/gsap",
+    "lz-string": "https://esm.sh/lz-string"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="h-screen overflow-hidden flex flex-col">
+    <div id="root" class="h-full flex flex-col relative z-10"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

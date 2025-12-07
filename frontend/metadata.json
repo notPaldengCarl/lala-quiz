@@ -1,0 +1,5 @@
+{
+  "name": "Gemini QuizMaster",
+  "description": "An advanced AI-powered Quiz and Flashcard generator capable of ingesting documents and creating interactive study sets.",
+  "requestFramePermissions": []
+}
