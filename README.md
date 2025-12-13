@@ -10,7 +10,7 @@ An advanced AI-powered study companion that generates quizzes, flashcards, and m
 
 ### Artificial Intelligence
 *   **Google GenAI SDK (`@google/genai`)**:
-    *   **Model**: `gemini-3-pro-preview` (Selected for superior reasoning capabilities).
+    *   **Model**: `gemini-2.5-flash` (Optimized for speed and free-tier availability).
     *   **Function**: Ingests text and images to generate structured JSON study sets containing questions, answers, summaries, and keywords.
 
 ### Styling & UI
