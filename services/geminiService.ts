@@ -1,26 +1,21 @@
+
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { QuizData, QuizSettings, FileData } from "../types";
 
 const getApiKey = (): string | undefined => {
-  // 1. Try Vite / Modern Frontend Build Tools (import.meta.env)
   try {
     // @ts-ignore
     if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_KEY) {
       // @ts-ignore
       return import.meta.env.VITE_API_KEY;
     }
-  } catch (e) {
-    // Ignore
-  }
+  } catch (e) {}
 
-  // 2. Try Node.js / Cloud Environment (process.env)
   try {
     if (typeof process !== 'undefined' && process.env?.API_KEY) {
       return process.env.API_KEY;
     }
-  } catch (e) {
-    // process is not defined in browser
-  }
+  } catch (e) {}
 
   return undefined;
 };
@@ -43,36 +38,31 @@ export const generateQuiz = async (
   const apiKey = getApiKey();
   
   if (!apiKey) {
-    throw new Error("API Key is missing. If running locally, create a .env file with VITE_API_KEY=your_key");
+    throw new Error("API Key is missing. \n\n1. Local: Check your .env file has VITE_API_KEY.\n2. Vercel/Netlify: Add 'VITE_API_KEY' in your Project Settings > Environment Variables and REDEPLOY.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
 
+  // Prompt optimized for token usage and strict schema adherence (Speed & Accuracy)
   const prompt = `
     You are LalaQuiz, an expert educational AI.
     
-    Task: Create a study set (Quiz + Summary + Keywords).
+    Task: Create a study set (Quiz + Summary + Keywords + Study Plan).
     Settings:
-    - Questions: ${settings.numberOfQuestions}
+    - Count: ${settings.numberOfQuestions}
     - Difficulty: ${settings.difficulty}
     - Types: ${settings.questionTypes.join(', ')}
 
-    Important Rules:
-    1. **True/False**: If a question is 'true_false', the 'options' array MUST be ["True", "False"].
-    2. **Accuracy**: Ensure the 'correct_answer' exactly matches one of the 'options'.
-    3. **Explanations**: Provide clear, helpful explanations.
-    4. **Output**: STRICT JSON format only.
-
-    Schema:
-    - questions: Array of objects (id, type, question, options, correct_answer, explanation)
-    - summary: String (Concise summary)
-    - keywords: Array of Strings (Key terms)
+    Rules:
+    1. **True/False**: 'options' must be ["True", "False"].
+    2. **Accuracy**: 'correct_answer' must be exact.
+    3. **Output**: STRICT JSON.
   `;
 
   const parts: any[] = [{ text: prompt }];
 
   if (text.trim()) {
-    parts.push({ text: `\nSource Text:\n${text}` });
+    parts.push({ text: `\nSource:\n${text}` });
   }
 
   files.forEach(file => {
@@ -99,6 +89,17 @@ export const generateQuiz = async (
       },
       summary: { type: Type.STRING },
       keywords: { type: Type.ARRAY, items: { type: Type.STRING } },
+      study_plan: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            day: { type: Type.STRING },
+            topic: { type: Type.STRING },
+            activity: { type: Type.STRING }
+          }
+        }
+      },
       questions: {
         type: Type.ARRAY,
         items: {
@@ -115,12 +116,13 @@ export const generateQuiz = async (
         },
       },
     },
-    required: ["metadata", "questions", "summary", "keywords"],
+    required: ["metadata", "questions", "summary", "keywords", "study_plan"],
   };
 
   try {
+    // Upgraded to gemini-3-pro-preview for better reasoning and higher quality output
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash', // Switched to 2.5-flash for better free tier limits
+      model: 'gemini-3-pro-preview',
       contents: {
         role: 'user',
         parts: parts
@@ -140,7 +142,7 @@ export const generateQuiz = async (
   } catch (error: any) {
     console.error("Gemini Generation Error:", error);
     if (error.status === 429 || error.message?.includes('429')) {
-         throw new Error("Free tier quota exceeded. Please wait a moment before trying again.");
+         throw new Error("Free tier quota exceeded. Please wait a moment.");
     }
     throw error;
   }

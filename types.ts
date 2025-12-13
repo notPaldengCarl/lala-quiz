@@ -1,3 +1,4 @@
+
 export enum Difficulty {
   Easy = 'Easy',
   Medium = 'Medium',
@@ -37,6 +38,12 @@ export interface Question {
   explanation?: string;
 }
 
+export interface StudyPlanItem {
+  day: string;
+  topic: string;
+  activity: string;
+}
+
 export interface QuizMetadata {
   source: string;
   number_of_questions: number;
@@ -49,6 +56,7 @@ export interface QuizData {
   questions: Question[];
   summary?: string;
   keywords?: string[];
+  study_plan?: StudyPlanItem[];
 }
 
 export interface QuizSession {

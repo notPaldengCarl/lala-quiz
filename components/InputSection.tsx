@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { QuizSettings, Difficulty, QuestionType, ScoringType, FileData, UserStats, QuizSession } from '../types';
 import { MAX_QUESTIONS_LIMIT, MIN_QUESTIONS_LIMIT, DAILY_QUOTES } from '../constants';
@@ -109,16 +110,16 @@ const InputSection: React.FC<InputSectionProps> = ({
     <div className="max-w-7xl mx-auto w-full animate-fade-in-up pb-12">
       
       {/* Hero Section */}
-      <div className="text-center mb-10">
-         <h1 className="text-[4rem] md:text-[6rem] leading-none font-black text-[#544230] tracking-tighter drop-shadow-sm uppercase">
+      <div className="text-center mb-8 md:mb-10 px-4">
+         <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[6rem] leading-none font-black text-[#544230] tracking-tighter drop-shadow-sm uppercase">
            LALA<span className="text-[#A08267]">QUIZ</span>
          </h1>
-         <p className="mt-4 text-lg font-medium text-[#79614B] max-w-xl mx-auto italic">
+         <p className="mt-4 text-base md:text-lg font-medium text-[#79614B] max-w-xl mx-auto italic">
             "{randomQuote}"
          </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 md:px-0">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 px-0 md:px-0">
         
         {/* Left: Input & Creation Area */}
         <div className="lg:col-span-8 space-y-6">
@@ -126,20 +127,19 @@ const InputSection: React.FC<InputSectionProps> = ({
               <div className="p-4 border-b-2 border-[#544230] flex justify-between items-center bg-[#544230] rounded-t-[20px]">
                  <div className="flex items-center gap-2 text-[#F5F1E8]">
                     <i className="fas fa-layer-group"></i>
-                    <span className="font-bold uppercase tracking-wider text-sm">Source Material</span>
+                    <span className="font-bold uppercase tracking-wider text-xs md:text-sm">Source Material</span>
                  </div>
                  <button 
                    onClick={() => fileInputRef.current?.click()}
-                   className="text-xs font-bold text-[#544230] bg-[#F5F1E8] px-4 py-2 rounded-lg hover:bg-white transition-colors uppercase flex items-center gap-2"
+                   className="text-[10px] md:text-xs font-bold text-[#544230] bg-[#F5F1E8] px-3 py-2 rounded-lg hover:bg-white transition-colors uppercase flex items-center gap-2"
                  >
                    <i className="fas fa-plus"></i> Add Content
                  </button>
-                 {/* Updated accept attribute for images */}
                  <input type="file" ref={fileInputRef} className="hidden" accept=".txt,.pdf,.md,.csv,.jpg,.jpeg,.png,.webp" multiple onChange={handleFileChange} />
               </div>
               
               <textarea
-                className="w-full h-64 p-6 focus:outline-none text-[#544230] placeholder-[#A08267]/50 resize-none text-lg bg-[#F5F1E8] rounded-b-[20px]"
+                className="w-full h-48 md:h-64 p-4 md:p-6 focus:outline-none text-[#544230] placeholder-[#A08267]/50 resize-none text-base md:text-lg bg-[#F5F1E8] rounded-b-[20px]"
                 placeholder="Paste text or upload images/PDFs to generate questions..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
@@ -148,16 +148,16 @@ const InputSection: React.FC<InputSectionProps> = ({
               {files.length > 0 && (
                 <div className="p-4 bg-white border-t-2 border-[#544230]/10 flex flex-wrap gap-3 rounded-b-[20px]">
                   {files.map((file, idx) => (
-                    <div key={idx} className="flex items-center gap-2 bg-[#F5F1E8] border border-[#C9A585] px-3 py-2 rounded-lg text-sm font-bold text-[#544230]">
+                    <div key={idx} className="flex items-center gap-2 bg-[#F5F1E8] border border-[#C9A585] px-3 py-2 rounded-lg text-sm font-bold text-[#544230] max-w-full">
                       {file.mimeType.startsWith('image/') ? (
-                         <div className="w-8 h-8 rounded bg-white overflow-hidden border border-[#C9A585]">
+                         <div className="w-8 h-8 rounded bg-white overflow-hidden border border-[#C9A585] flex-shrink-0">
                              <img src={`data:${file.mimeType};base64,${file.data}`} alt="preview" className="w-full h-full object-cover" />
                          </div>
                       ) : (
-                         <i className="fas fa-file-alt text-[#A08267] text-lg"></i>
+                         <i className="fas fa-file-alt text-[#A08267] text-lg flex-shrink-0"></i>
                       )}
-                      <span className="max-w-[150px] truncate">{file.name}</span>
-                      <button onClick={() => removeFile(idx)} className="hover:text-red-500 ml-2"><i className="fas fa-times"></i></button>
+                      <span className="truncate max-w-[120px] md:max-w-[150px]">{file.name}</span>
+                      <button onClick={() => removeFile(idx)} className="hover:text-red-500 ml-2 flex-shrink-0"><i className="fas fa-times"></i></button>
                     </div>
                   ))}
                 </div>
@@ -165,7 +165,7 @@ const InputSection: React.FC<InputSectionProps> = ({
            </div>
             
            {/* Configuration */}
-           <div className="earth-card p-8 bg-white">
+           <div className="earth-card p-6 md:p-8 bg-white">
               <div className="flex items-center gap-2 mb-6">
                  <i className="fas fa-sliders-h text-[#A08267]"></i>
                  <h3 className="text-lg font-bold uppercase text-[#544230]">Quiz Configuration</h3>
@@ -200,7 +200,7 @@ const InputSection: React.FC<InputSectionProps> = ({
                           <button
                             key={d}
                             onClick={() => handleSettingChange('difficulty', d)}
-                            className={`flex-1 py-2 text-xs font-bold uppercase border-2 rounded-lg transition-all ${
+                            className={`flex-1 py-2 text-[10px] md:text-xs font-bold uppercase border-2 rounded-lg transition-all ${
                                settings.difficulty === d 
                                ? 'bg-[#544230] text-[#F5F1E8] border-[#544230]' 
                                : 'bg-white border-[#C9A585] text-[#79614B] hover:border-[#544230]'
@@ -220,7 +220,7 @@ const InputSection: React.FC<InputSectionProps> = ({
                            <button
                               key={type}
                               onClick={() => toggleQuestionType(type)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm font-bold transition-all uppercase ${
+                              className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 text-xs md:text-sm font-bold transition-all uppercase ${
                                  settings.questionTypes.includes(type)
                                  ? 'bg-[#A08267] border-[#A08267] text-white shadow-sm'
                                  : 'bg-white border-[#C9A585] text-[#79614B] hover:border-[#A08267]'
@@ -274,7 +274,7 @@ const InputSection: React.FC<InputSectionProps> = ({
            </div>
 
            {/* History List */}
-           <div className="earth-card bg-white overflow-hidden flex flex-col h-[600px]">
+           <div className="earth-card bg-white overflow-hidden flex flex-col h-[400px] md:h-[600px]">
               <div className="p-5 border-b-2 border-[#544230]/10 bg-[#F5F1E8]">
                  <h3 className="font-bold uppercase text-[#544230] flex items-center gap-2">
                     <i className="fas fa-history"></i> Session History
