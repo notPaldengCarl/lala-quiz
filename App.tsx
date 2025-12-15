@@ -211,7 +211,7 @@ const App: React.FC = () => {
         const compressed = compressQuizData(session.data);
         const url = `${window.location.origin}${window.location.pathname}?share=${compressed}`;
         
-        if (url.length > 8000) {
+        if (url.length > 10000000) {
            setError("Quiz is too large for a link. Try exporting as JSON.");
            return;
         }
